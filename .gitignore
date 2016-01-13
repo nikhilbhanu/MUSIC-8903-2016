@@ -29,3 +29,4 @@
 /bld
 /bin
 *.bak
+/lib/debug/*.exp
