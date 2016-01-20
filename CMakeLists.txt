@@ -45,4 +45,6 @@ message(STATUS "")
 
 # generate platform config file
 configure_file(${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}Config.h.in ${CMAKE_BINARY_DIR}/inc/${PROJECT_NAME}Config.h)
+# integrate cppcheck targets in IDE
+option (WITH_CPPCHECKTARGET "Add target for cppcheck testing" ON)
 
