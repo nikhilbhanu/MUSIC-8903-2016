@@ -7148,8 +7148,9 @@ double cbrt(double x)
   return(-pow(-x, 1.0 / 3.0));
 }
 
-static bool is_inf(s7_Double x) {return((x == x) && (is_NaN(x - x)));}
-
+//static bool is_inf(s7_Double x) { return((x == x) && (is_NaN(x - x))); }
+//static bool is_inf(double x) { return true; }
+#define is_inf(a) (true)
 #endif
 
 
