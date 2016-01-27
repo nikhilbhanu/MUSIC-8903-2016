@@ -28,6 +28,7 @@ include(AddIncDirectories)
 set (PROJECT_DIRECTORIES)
 list (APPEND PROJECT_DIRECTORIES ${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}Exec)       
 list (APPEND PROJECT_DIRECTORIES ${CMAKE_SOURCE_DIR}/src/AudioFileIO) 
+list (APPEND PROJECT_DIRECTORIES ${CMAKE_SOURCE_DIR}/src/Tests/TestExec)
     
 # set includes
 set (PROJECT_INCLUDES)
@@ -47,4 +48,19 @@ message(STATUS "")
 configure_file(${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}Config.h.in ${CMAKE_BINARY_DIR}/inc/${PROJECT_NAME}Config.h)
 # integrate cppcheck targets in IDE
 option (WITH_CPPCHECKTARGET "Add target for cppcheck testing" ON)
+#######################################################################################################
+# ## tests
+
+# with tests or not
+option (WITH_TESTS "Use UnitTest++ for testing" ON)
+
+if (WITH_TESTS)
+    include(AddCppcheckTest)
+	enable_testing()
+ 	
+	# add tests here
+	add_test(AudioIo ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TestExec AudioIo "${CMAKE_SOURCE_DIR}/src/Tests/TestData/")
+	add_test(RingBuff ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TestExec RingBuff)
+	add_cppcheck_test ()
+endif (WITH_TESTS)
 

@@ -1,5 +1,5 @@
-#ifndef __MigEdit_config_hdr__
-#define __MigEdit_config_hdr__
+#ifndef __MUSI8903_config_hdr__
+#define __MUSI8903_config_hdr__
 
 // set platform defines
 #ifndef GTCMT_LINUX32
@@ -25,8 +25,8 @@
 #endif // WITH_TESTS
 
 // set the version number
-#define MigEdit_VERSION_MAJOR ${PROJECT_VERSION_MAJOR}
-#define MigEdit_VERSION_MINOR ${PROJECT_VERSION_MINOR}
-#define MigEdit_VERSION_PATCH ${PROJECT_VERSION_PATCH}
+#define MUSI8903_VERSION_MAJOR ${PROJECT_VERSION_MAJOR}
+#define MUSI8903_VERSION_MINOR ${PROJECT_VERSION_MINOR}
+#define MUSI8903_VERSION_PATCH ${PROJECT_VERSION_PATCH}
 
 #endif // __MigEdit_config_hdr__
