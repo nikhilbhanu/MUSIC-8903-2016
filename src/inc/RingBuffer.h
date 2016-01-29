@@ -9,7 +9,7 @@ template <class T>
 class CRingBuffer
 {
 public:
-    CRingBuffer (int iBufferLengthInSamples) :
+    explicit CRingBuffer (int iBufferLengthInSamples) :
         m_iBuffLength(iBufferLengthInSamples),
         m_iReadIdx(0),                          
         m_iWriteIdx(0),
@@ -187,6 +187,7 @@ public:
         return m_iBuffLength;
     }
 private:
+    CRingBuffer ();
     CRingBuffer(const CRingBuffer& that);
 
     void incIdx (int &iIdx, int iOffset = 1)
