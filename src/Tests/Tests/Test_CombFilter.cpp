@@ -18,7 +18,7 @@ SUITE(CombFilter)
             m_pCombFilter(0),
             m_ppfInputData(0),
             m_ppfOutputData(0),
-            m_kiDataLength(35131),
+            m_iDataLength(35131),
             m_fMaxDelayLength(3.F),
             m_iBlockLength(171),
             m_iNumChannels(3),
@@ -34,10 +34,10 @@ SUITE(CombFilter)
             m_ppfOutputTmp  = new float*[m_iNumChannels];
             for (int i = 0; i < m_iNumChannels; i++)
             {
-                m_ppfInputData[i]   = new float [m_kiDataLength];
-                CVectorFloat::setZero(m_ppfInputData[i], m_kiDataLength);
-                m_ppfOutputData[i]  = new float [m_kiDataLength];
-                CVectorFloat::setZero(m_ppfOutputData[i], m_kiDataLength);            }
+                m_ppfInputData[i]   = new float [m_iDataLength];
+                CVectorFloat::setZero(m_ppfInputData[i], m_iDataLength);
+                m_ppfOutputData[i]  = new float [m_iDataLength];
+                CVectorFloat::setZero(m_ppfOutputData[i], m_iDataLength);            }
         }
 
         ~CombFilterData() 
@@ -57,15 +57,15 @@ SUITE(CombFilter)
 
         void TestProcess() 
         {
-            int iNumFramesRemaining = m_kiDataLength;
+            int iNumFramesRemaining = m_iDataLength;
             while (iNumFramesRemaining > 0)
             {
                 int iNumFrames = std::min(iNumFramesRemaining, m_iBlockLength);
 
                 for (int c = 0; c < m_iNumChannels; c++)
                 {
-                    m_ppfInputTmp[c]    = &m_ppfInputData[c][m_kiDataLength - iNumFramesRemaining];
-                    m_ppfOutputTmp[c]   = &m_ppfOutputData[c][m_kiDataLength - iNumFramesRemaining];
+                    m_ppfInputTmp[c]    = &m_ppfInputData[c][m_iDataLength - iNumFramesRemaining];
+                    m_ppfOutputTmp[c]   = &m_ppfOutputData[c][m_iDataLength - iNumFramesRemaining];
                 }
                 m_pCombFilter->process(m_ppfInputTmp, m_ppfOutputTmp, iNumFrames);
 
@@ -74,14 +74,14 @@ SUITE(CombFilter)
         }
         void TestProcessInplace() 
         {
-            int iNumFramesRemaining = m_kiDataLength;
+            int iNumFramesRemaining = m_iDataLength;
             while (iNumFramesRemaining > 0)
             {
                 int iNumFrames = std::min(iNumFramesRemaining, m_iBlockLength);
 
                 for (int c = 0; c < m_iNumChannels; c++)
                 {
-                    m_ppfInputTmp[c]    = &m_ppfInputData[c][m_kiDataLength - iNumFramesRemaining];
+                    m_ppfInputTmp[c]    = &m_ppfInputData[c][m_iDataLength - iNumFramesRemaining];
                 }
                 m_pCombFilter->process(m_ppfInputTmp, m_ppfInputTmp, iNumFrames);
 
@@ -96,7 +96,7 @@ SUITE(CombFilter)
                     **m_ppfOutputData,
                     **m_ppfInputTmp,
                     **m_ppfOutputTmp;
-        const int m_kiDataLength;
+        int     m_iDataLength;
         float   m_fMaxDelayLength;
         int     m_iBlockLength;
         int     m_iNumChannels;
@@ -116,7 +116,7 @@ SUITE(CombFilter)
         TestProcess();
 
         for (int c = 0; c < m_iNumChannels; c++)
-            CHECK_ARRAY_CLOSE(m_ppfInputData[c], m_ppfOutputData[c], m_kiDataLength, 1e-3);
+            CHECK_ARRAY_CLOSE(m_ppfInputData[c], m_ppfOutputData[c], m_iDataLength, 1e-3);
 
         m_pCombFilter->reset();
 
@@ -128,7 +128,7 @@ SUITE(CombFilter)
         TestProcess();
 
         for (int c = 0; c < m_iNumChannels; c++)
-            CHECK_ARRAY_CLOSE(m_ppfInputData[c], m_ppfOutputData[c], m_kiDataLength, 1e-3);
+            CHECK_ARRAY_CLOSE(m_ppfInputData[c], m_ppfOutputData[c], m_iDataLength, 1e-3);
     }
 
     TEST_FIXTURE(CombFilterData, FirCancellation)
@@ -139,26 +139,26 @@ SUITE(CombFilter)
         
         // full period length
         for (int c = 0; c < m_iNumChannels; c++)
-            CSynthesis::generateSine (m_ppfInputData[c], 1.F/m_fDelay, m_fSampleRate, m_kiDataLength, .8F, static_cast<float>(c*M_PI_2));
+            CSynthesis::generateSine (m_ppfInputData[c], 1.F/m_fDelay, m_fSampleRate, m_iDataLength, .8F, static_cast<float>(c*M_PI_2));
         m_pCombFilter->setParam(CCombFilterIf::kParamGain, -1.F);
 
         TestProcess();
 
         for (int c = 0; c < m_iNumChannels; c++)
-            for (int i = static_cast<int>(m_fDelay*m_fSampleRate+.5F); i < m_kiDataLength; i++)
+            for (int i = static_cast<int>(m_fDelay*m_fSampleRate+.5F); i < m_iDataLength; i++)
                 CHECK_CLOSE(0.F, m_ppfOutputData[c][i], 1e-3F);
 
         // half period length
         m_pCombFilter->reset();
         for (int c = 0; c < m_iNumChannels; c++)
-            CSynthesis::generateSine (m_ppfInputData[c], .5F/m_fDelay, m_fSampleRate, m_kiDataLength, .8F, static_cast<float>(c*M_PI_2));
+            CSynthesis::generateSine (m_ppfInputData[c], .5F/m_fDelay, m_fSampleRate, m_iDataLength, .8F, static_cast<float>(c*M_PI_2));
         m_pCombFilter->setParam(CCombFilterIf::kParamGain, 1.F);
         m_pCombFilter->setParam(CCombFilterIf::kParamDelay, m_fDelay);
 
         TestProcess();
 
         for (int c = 0; c < m_iNumChannels; c++)
-            for (int i = static_cast<int>(m_fDelay*m_fSampleRate+.5F); i < m_kiDataLength; i++)
+            for (int i = static_cast<int>(m_fDelay*m_fSampleRate+.5F); i < m_iDataLength; i++)
                 CHECK_CLOSE(0.F, m_ppfOutputData[c][i], 1e-3F);
     }
 
@@ -181,7 +181,7 @@ SUITE(CombFilter)
 
         for (int c = 0; c < m_iNumChannels; c++)
         {
-            for (int i= 0; i < m_kiDataLength; i++)
+            for (int i= 0; i < m_iDataLength; i++)
             {
                 if (i == c)
                     CHECK_CLOSE(fAmplitude, m_ppfOutputData[c][i], 1e-3F);
@@ -203,7 +203,7 @@ SUITE(CombFilter)
 
         for (int c = 0; c < m_iNumChannels; c++)
         {
-            for (int i= 0; i < m_kiDataLength; i++)
+            for (int i= 0; i < m_iDataLength; i++)
             {
                 if (i == c)
                     CHECK_CLOSE(fAmplitude, m_ppfOutputData[c][i], 1e-3F);
@@ -229,7 +229,7 @@ SUITE(CombFilter)
         m_pCombFilter->init(CCombFilterIf::kCombFIR, m_fMaxDelayLength, m_fSampleRate, m_iNumChannels);
 
         for (int c = 0; c < m_iNumChannels; c++)
-            CSynthesis::generateSine (m_ppfInputData[c], 387.F, m_fSampleRate, m_kiDataLength, .8F, static_cast<float>(c*M_PI_2));
+            CSynthesis::generateSine (m_ppfInputData[c], 387.F, m_fSampleRate, m_iDataLength, .8F, static_cast<float>(c*M_PI_2));
         m_pCombFilter->setParam(CCombFilterIf::kParamGain, m_fGain);
         m_pCombFilter->setParam(CCombFilterIf::kParamDelay, m_fDelay);
 
@@ -241,14 +241,14 @@ SUITE(CombFilter)
         TestProcessInplace();
 
         for (int c = 0; c < m_iNumChannels; c++)
-            CHECK_ARRAY_CLOSE(m_ppfInputData[c], m_ppfOutputData[c], m_kiDataLength, 1e-3);
+            CHECK_ARRAY_CLOSE(m_ppfInputData[c], m_ppfOutputData[c], m_iDataLength, 1e-3);
 
         m_pCombFilter->reset();
 
         // Iir
         m_pCombFilter->init(CCombFilterIf::kCombIIR, m_fMaxDelayLength, m_fSampleRate, m_iNumChannels);
         for (int c = 0; c < m_iNumChannels; c++)
-            CSynthesis::generateSine (m_ppfInputData[c], 387.F, m_fSampleRate, m_kiDataLength, .8F, static_cast<float>(c*M_PI_2));
+            CSynthesis::generateSine (m_ppfInputData[c], 387.F, m_fSampleRate, m_iDataLength, .8F, static_cast<float>(c*M_PI_2));
         m_pCombFilter->setParam(CCombFilterIf::kParamGain, m_fGain);
         m_pCombFilter->setParam(CCombFilterIf::kParamDelay, m_fDelay);
 
@@ -260,7 +260,7 @@ SUITE(CombFilter)
         TestProcessInplace();
 
         for (int c = 0; c < m_iNumChannels; c++)
-            CHECK_ARRAY_CLOSE(m_ppfInputData[c], m_ppfOutputData[c], m_kiDataLength, 1e-3);
+            CHECK_ARRAY_CLOSE(m_ppfInputData[c], m_ppfOutputData[c], m_iDataLength, 1e-3);
     }
 
     TEST_FIXTURE(CombFilterData, VaryingBlocksize)
@@ -269,7 +269,7 @@ SUITE(CombFilter)
         m_pCombFilter->init(CCombFilterIf::kCombFIR, m_fMaxDelayLength, m_fSampleRate, m_iNumChannels);
 
         for (int c = 0; c < m_iNumChannels; c++)
-            CSynthesis::generateSine (m_ppfInputData[c], 387.F, m_fSampleRate, m_kiDataLength, .8F, static_cast<float>(c*M_PI_2));
+            CSynthesis::generateSine (m_ppfInputData[c], 387.F, m_fSampleRate, m_iDataLength, .8F, static_cast<float>(c*M_PI_2));
         m_pCombFilter->setParam(CCombFilterIf::kParamGain, m_fGain);
         m_pCombFilter->setParam(CCombFilterIf::kParamDelay, m_fDelay);
 
@@ -280,7 +280,7 @@ SUITE(CombFilter)
         m_pCombFilter->setParam(CCombFilterIf::kParamGain, m_fGain);
         m_pCombFilter->setParam(CCombFilterIf::kParamDelay, m_fDelay);
         {
-            int iNumFramesRemaining = m_kiDataLength;
+            int iNumFramesRemaining = m_iDataLength;
             while (iNumFramesRemaining > 0)
             {
 
@@ -288,7 +288,7 @@ SUITE(CombFilter)
 
                 for (int c = 0; c < m_iNumChannels; c++)
                 {
-                    m_ppfInputTmp[c]    = &m_ppfInputData[c][m_kiDataLength - iNumFramesRemaining];
+                    m_ppfInputTmp[c]    = &m_ppfInputData[c][m_iDataLength - iNumFramesRemaining];
                 }
                 m_pCombFilter->process(m_ppfInputTmp, m_ppfInputTmp, iNumFrames);
 
@@ -297,13 +297,13 @@ SUITE(CombFilter)
         }
 
         for (int c = 0; c < m_iNumChannels; c++)
-            CHECK_ARRAY_CLOSE(m_ppfInputData[c], m_ppfOutputData[c], m_kiDataLength, 1e-3);
+            CHECK_ARRAY_CLOSE(m_ppfInputData[c], m_ppfOutputData[c], m_iDataLength, 1e-3);
 
         //Iir
         m_pCombFilter->init(CCombFilterIf::kCombIIR, m_fMaxDelayLength, m_fSampleRate, m_iNumChannels);
 
         for (int c = 0; c < m_iNumChannels; c++)
-            CSynthesis::generateSine (m_ppfInputData[c], 387.F, m_fSampleRate, m_kiDataLength, .8F, static_cast<float>(c*M_PI_2));
+            CSynthesis::generateSine (m_ppfInputData[c], 387.F, m_fSampleRate, m_iDataLength, .8F, static_cast<float>(c*M_PI_2));
         m_pCombFilter->setParam(CCombFilterIf::kParamGain, m_fGain);
         m_pCombFilter->setParam(CCombFilterIf::kParamDelay, m_fDelay);
 
@@ -314,7 +314,7 @@ SUITE(CombFilter)
         m_pCombFilter->setParam(CCombFilterIf::kParamGain, m_fGain);
         m_pCombFilter->setParam(CCombFilterIf::kParamDelay, m_fDelay);
         {
-            int iNumFramesRemaining = m_kiDataLength;
+            int iNumFramesRemaining = m_iDataLength;
             while (iNumFramesRemaining > 0)
             {
 
@@ -322,7 +322,7 @@ SUITE(CombFilter)
 
                 for (int c = 0; c < m_iNumChannels; c++)
                 {
-                    m_ppfInputTmp[c]    = &m_ppfInputData[c][m_kiDataLength - iNumFramesRemaining];
+                    m_ppfInputTmp[c]    = &m_ppfInputData[c][m_iDataLength - iNumFramesRemaining];
                 }
                 m_pCombFilter->process(m_ppfInputTmp, m_ppfInputTmp, iNumFrames);
 
@@ -331,7 +331,7 @@ SUITE(CombFilter)
         }
 
         for (int c = 0; c < m_iNumChannels; c++)
-            CHECK_ARRAY_CLOSE(m_ppfInputData[c], m_ppfOutputData[c], m_kiDataLength, 1e-3);
+            CHECK_ARRAY_CLOSE(m_ppfInputData[c], m_ppfOutputData[c], m_iDataLength, 1e-3);
     }
 }
 
