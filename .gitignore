@@ -31,3 +31,4 @@
 *.bak
 /lib/debug/*.exp
 /bld-2015
+/lib/debug/libUnitTest++.lib.lastcodeanalysissucceeded
