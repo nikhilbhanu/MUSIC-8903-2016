@@ -8,16 +8,16 @@ set (SndLIB sndlib)
 
 ##############################################################
 ## unitTest++
-file(GLOB ${TestLIB}_SOURCES RELATIVE ${CMAKE_SOURCE_DIR}/Tests/${APP} ../../../3rdparty/unittest-cpp-master/${TestLIB}/${PlatformDir}/*.c;../../../3rdparty/unittest-cpp-master/${TestLIB}/${PlatformDir}/*.cpp)
-file(GLOB ${TestLIB}_HEADERS RELATIVE ${CMAKE_SOURCE_DIR}/Tests/${APP} ../../../3rdparty/unittest-cpp-master/${TestLIB}/${PlatformDir}/*.h)
+file(GLOB ${TestLIB}_SOURCES RELATIVE ${CMAKE_SOURCE_DIR}/src/Tests/${APP} ../../../3rdparty/unittest-cpp-master/${TestLIB}/${PlatformDir}/*.c;../../../3rdparty/unittest-cpp-master/${TestLIB}/${PlatformDir}/*.cpp)
+file(GLOB ${TestLIB}_HEADERS RELATIVE ${CMAKE_SOURCE_DIR}/src/Tests/${APP} ../../../3rdparty/unittest-cpp-master/${TestLIB}/${PlatformDir}/*.h)
 
 if(GTCMT_WIN32 OR GTCMT_WIN64)
     set(PlatformDir Win32)
 else(GTCMT_WIN32 OR GTCMT_WIN64)
     set(PlatformDir Posix)
 endif(GTCMT_WIN32 OR GTCMT_WIN64)
-file(GLOB ${TestLIB}_SOURCES_2 RELATIVE ${CMAKE_SOURCE_DIR}/Tests/${APP} ../../../3rdparty/unittest-cpp-master/${TestLIB}/${PlatformDir}/*.cpp)
-file(GLOB ${TestLIB}_HEADERS_2 RELATIVE ${CMAKE_SOURCE_DIR}/Tests/${APP} ../../../3rdparty/unittest-cpp-master/${TestLIB}/${PlatformDir}/${PlatformDir}/*.h)
+file(GLOB ${TestLIB}_SOURCES_2 RELATIVE ${CMAKE_SOURCE_DIR}/src/Tests/${APP} ../../../3rdparty/unittest-cpp-master/${TestLIB}/${PlatformDir}/*.cpp)
+file(GLOB ${TestLIB}_HEADERS_2 RELATIVE ${CMAKE_SOURCE_DIR}/src/Tests/${APP} ../../../3rdparty/unittest-cpp-master/${TestLIB}/${PlatformDir}/${PlatformDir}/*.h)
 list (APPEND PROJECT_INCLUDES ${CMAKE_SOURCE_DIR}/3rdparty/unittest-cpp-master/${TestLIB})
 
 # build a static library
@@ -41,13 +41,13 @@ endif (WITH_TESTS)
 
 ##############################################################
 ## TestExec
-file(GLOB ${APP}_SOURCES RELATIVE ${CMAKE_SOURCE_DIR}/Tests/${APP} Test.cpp)
-file(GLOB ${APP}_HEADERS RELATIVE ${CMAKE_SOURCE_DIR}/Tests/${APP} *.h;../incl/*.h)
+file(GLOB ${APP}_SOURCES RELATIVE ${CMAKE_SOURCE_DIR}/src/Tests/${APP} Test.cpp)
+file(GLOB ${APP}_HEADERS RELATIVE ${CMAKE_SOURCE_DIR}/src/Tests/${APP} *.h;../incl/*.h)
 source_group (Main FILES ${APP}_SOURCES ${APP}_HEADERS)
 
 # these are the individual tests
-file(GLOB ${APP}_SOURCES_TEST RELATIVE ${CMAKE_SOURCE_DIR}/Tests/${APP} ../Tests/*.cpp;)
-file(GLOB ${APP}_HEADERS_TEST RELATIVE ${CMAKE_SOURCE_DIR}/Tests/${APP} ../Tests/*.h)
+file(GLOB ${APP}_SOURCES_TEST RELATIVE ${CMAKE_SOURCE_DIR}/src/Tests/${APP} ../Tests/*.cpp;)
+file(GLOB ${APP}_HEADERS_TEST RELATIVE ${CMAKE_SOURCE_DIR}/src/Tests/${APP} ../Tests/*.h)
 source_group (Tests FILES ${APP}_SOURCES_TEST ${APP}_HEADERS_TEST)
 
 ## add include directories
