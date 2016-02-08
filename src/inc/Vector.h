@@ -6,6 +6,8 @@
 #include <limits>
 #include <cmath>
 
+/*! \brief class with static functions for buffer operations with type T
+*/
 class CVector
 {
 public:
@@ -68,6 +70,9 @@ public:
             memmove (&pSrcDest[iDestIdx], &pSrcDest[iSrcIdx], sizeof(T)*iLength);
     }
 };
+
+/*! \brief class with static functions for buffer operations with type float
+*/
 class CVectorFloat
 {
 public:

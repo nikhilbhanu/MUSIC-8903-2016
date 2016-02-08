@@ -5,6 +5,8 @@
 #include <cstring>
 #include <limits>
 
+/*! \brief class with static utility functions 
+*/
 class CUtil
 {
 public:
