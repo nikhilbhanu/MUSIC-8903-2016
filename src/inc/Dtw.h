@@ -31,11 +31,19 @@ private:
 
         kNumMatrixDimensions
     };
+    enum Directions_t
+    {
+        kHoriz,
+        kVert,
+        kDiag,
+
+        kNumDirections
+    };
     bool m_bIsInitialized;
 
     float *m_apfCost[kNumMatrixDimensions];
     float m_fOverallCost;
-    char  **m_ppcPathIdx;
+    Directions_t  **m_ppePathIdx;
     int   m_iLengthOfPath;
     int   m_aiMatrixDimensions[kNumMatrixDimensions];
 };
