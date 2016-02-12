@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
     _controlfp(~(_EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_DENORMAL), _MCW_EM) ;
 #endif // #ifndef WITHOUT_EXCEPTIONS
 
+
     // argument 2 contains the working dir
     if (argc > 2)
         cTestDataDir.assign(argv[2]);

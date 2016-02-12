@@ -63,5 +63,14 @@ public:
 
         return (1<<(iOrder));
     }
+
+    template<typename T>
+    static void swap (T &tValue1, T &tValue2)
+    {
+        T tTmp = tValue1;
+
+        tValue1 = tValue2;
+        tValue2 = tTmp;
+    }
 };
 #endif // __Util_hdr__
