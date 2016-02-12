@@ -128,28 +128,25 @@ Error_t CDtw::process(float **ppfDistanceMatrix)
 
 int CDtw::getPathLength()
 {
+    const int aiDecrement[kNumDirections][kNumMatrixDimensions] = 
+    {
+        {0, -1}, // kHoriz
+        {-1, 0}, // kVert
+        {-1, -1} // kDiag
+    };
     int i = m_aiMatrixDimensions[kRow]-1;
     int j = m_aiMatrixDimensions[kCol]-1;
-    m_iLengthOfPath = 0;
 
     if (!m_bWasProcessed)
-        return m_iLengthOfPath;
+        return 0;
 
-    while (i >= 0 && j >= 0)
+    m_iLengthOfPath = 1;
+
+    while (i > 0 || j > 0)
     {
-        switch(m_ppePathIdx[i][j])
-        {
-        case kDiag:
-            i--;
-            j--;
-            break;
-        case kHoriz:
-            j--;
-            break;
-        case kVert:
-            i--;
-            break;
-        }
+        int iNewI   = i + aiDecrement[m_ppePathIdx[i][j]][kRow];
+        j          += aiDecrement[m_ppePathIdx[i][j]][kCol];
+        i           = iNewI;
         m_iLengthOfPath++;
     }
     
@@ -170,7 +167,14 @@ Error_t CDtw::getPath( int **ppiPathResult ) const
         return kFunctionIllegalCallError;
 
     int iIdx = m_iLengthOfPath - 1;
+    const int aiDecrement[kNumDirections][kNumMatrixDimensions] = 
+    {
+        {0, -1}, // kHoriz
+        {-1, 0}, // kVert
+        {-1, -1} // kDiag
+    };
 
+    // init
     ppiPathResult[kRow][0]      = 0;
     ppiPathResult[kCol][0]      = 0;
     ppiPathResult[kRow][iIdx]   = m_aiMatrixDimensions[kRow]-1;
@@ -178,21 +182,8 @@ Error_t CDtw::getPath( int **ppiPathResult ) const
 
     while (iIdx > 0)
     {
-        switch(m_ppePathIdx[ppiPathResult[kRow][iIdx]][ppiPathResult[kCol][iIdx]])
-        {
-        case kDiag:
-            ppiPathResult[kRow][iIdx-1] = ppiPathResult[kRow][iIdx] - 1 ;
-            ppiPathResult[kCol][iIdx-1] = ppiPathResult[kCol][iIdx] - 1 ;
-            break;
-        case kHoriz:
-            ppiPathResult[kRow][iIdx-1] = ppiPathResult[kRow][iIdx];
-            ppiPathResult[kCol][iIdx-1] = ppiPathResult[kCol][iIdx] - 1 ;
-            break;
-        case kVert:
-            ppiPathResult[kRow][iIdx-1] = ppiPathResult[kRow][iIdx] - 1 ;
-            ppiPathResult[kCol][iIdx-1] = ppiPathResult[kCol][iIdx];
-            break;
-        }
+        ppiPathResult[kRow][iIdx-1] = ppiPathResult[kRow][iIdx] + aiDecrement[m_ppePathIdx[ppiPathResult[kRow][iIdx]][ppiPathResult[kCol][iIdx]]][kRow];
+        ppiPathResult[kCol][iIdx-1] = ppiPathResult[kCol][iIdx] + aiDecrement[m_ppePathIdx[ppiPathResult[kRow][iIdx]][ppiPathResult[kCol][iIdx]]][kCol];
         iIdx--;
     }
 

@@ -6,7 +6,8 @@
 
 #include "ErrorDef.h"
 
-
+/*! \brief basic dynamic time warping (http://www.audiocontentanalysis.org/code/helper-functions/dtw/)
+*/
 class CDtw
 {
 public:
@@ -49,7 +50,7 @@ public:
     */
     float getPathCost () const;
     
-    /*! returns the path
+    /*! returns the path \sa getPathLength
     \param ppiPathResult pointer to memory the result is written to (dimensions [2][length_of_path])
     \return Error_t
     */
