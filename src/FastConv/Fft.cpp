@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "Util.h"
+#include "Vector.h"
 #include "Fft.h"
 
 #include "rvfft.h"
