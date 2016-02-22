@@ -7,6 +7,8 @@ class CLfo;
 template <class T>
 class CRingBuffer;
 
+#include "ErrorDef.h"
+
 class CVibrato
 {
 public:

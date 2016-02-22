@@ -139,16 +139,6 @@ SUITE(RingBuff)
         CHECK_EQUAL(m_pfData[i-1] , m_pCRingBuffer->get());
     }
 
-    //TEST_FIXTURE(RingBuffer, RbPut)
-    //{
-    //    for(int i=0; i<m_iRingBuffLength; i++)
-    //    {
-    //        m_pCRingBuffer->put(m_pfData[i]); // 0 2 4 6 8 10 12 14 0 2
-    //        m_pCRingBuffer->setWriteIdx(2*(i+1)); //
-    //    }
-    //    CHECK_EQUAL(2*i%m_iRingBuffLength, m_pCRingBuffer->getNumValuesInBuffer());  // what does this mean. is this retruning the number of values between read and write pointers or the total number of non-zero entries in the totalBuffer of length 16?
-    //}
-
     TEST_FIXTURE(RingBuffer, RbGetSetIdx)
     {
         int test_Value = 10;
@@ -223,21 +213,21 @@ SUITE(RingBuff)
         }
     }
 
-    //TEST_FIXTURE(RingBuffer, RbFracDelay)
-    //{
-    //    for (int i = 0; i < m_iRingBuffLength; i++)
-    //        m_pCRingBuffer->putPostInc (1.F*i);
+    TEST_FIXTURE(RingBuffer, RbFracDelay)
+    {
+        for (int i = 0; i < m_iRingBuffLength; i++)
+            m_pCRingBuffer->putPostInc (1.F*i);
 
-    //    float fValue    = m_pCRingBuffer->get(.7F);
-    //    CHECK_CLOSE(.7F, fValue, 1e-4);
+        float fValue    = m_pCRingBuffer->get(.7F);
+        CHECK_CLOSE(.7F, fValue, 1e-4);
 
-    //    fValue          = m_pCRingBuffer->get(-1.8F);
-    //    CHECK_CLOSE(14.2F, fValue, 1e-4);
+        fValue          = m_pCRingBuffer->get(-1.8F);
+        CHECK_CLOSE(14.2F, fValue, 1e-4);
 
-    //    m_pCRingBuffer->setReadIdx(1);
-    //    fValue          = m_pCRingBuffer->get(-m_iRingBuffLength+1.F);
-    //    CHECK_CLOSE(2.F, fValue, 1e-4);
-    //}
+        m_pCRingBuffer->setReadIdx(1);
+        fValue          = m_pCRingBuffer->get(-m_iRingBuffLength+1.F);
+        CHECK_CLOSE(2.F, fValue, 1e-4);
+    }
 }
 
 #endif //WITH_TESTS
