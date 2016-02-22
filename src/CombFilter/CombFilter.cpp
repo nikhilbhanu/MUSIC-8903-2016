@@ -25,7 +25,7 @@ CCombFilterBase::CCombFilterBase( int iMaxDelayInFrames, int iNumChannels ) :
     {
         m_afParam[i]            = 0.F;
     }
-    m_aafParamRange[CCombFilterIf::kParamGain][0]  = std::numeric_limits<float>::min();
+    m_aafParamRange[CCombFilterIf::kParamGain][0]  = -std::numeric_limits<float>::max();
     m_aafParamRange[CCombFilterIf::kParamGain][1]  = std::numeric_limits<float>::max();
     m_aafParamRange[CCombFilterIf::kParamDelay][0] = 0;
     m_aafParamRange[CCombFilterIf::kParamDelay][1] = static_cast<float>(iMaxDelayInFrames);
@@ -58,7 +58,7 @@ Error_t CCombFilterBase::resetInstance()
 
 Error_t CCombFilterBase::setParam( CCombFilterIf::FilterParam_t eParam, float fParamValue )
 {
-    if (isInParamRange(eParam, fParamValue))
+    if (!isInParamRange(eParam, fParamValue))
         return kFunctionInvalidArgsError;
 
     // special actions for special parameters
