@@ -284,7 +284,7 @@ SUITE(CombFilter)
             while (iNumFramesRemaining > 0)
             {
 
-                int iNumFrames = std::min(static_cast<float>(iNumFramesRemaining), static_cast<float>(rand())/RAND_MAX*17000);
+                int iNumFrames = std::min(static_cast<float>(iNumFramesRemaining), static_cast<float>(rand())/RAND_MAX*17000.F);
 
                 for (int c = 0; c < m_iNumChannels; c++)
                 {
@@ -318,7 +318,7 @@ SUITE(CombFilter)
             while (iNumFramesRemaining > 0)
             {
 
-                int iNumFrames = std::min(static_cast<float>(iNumFramesRemaining), static_cast<float>(rand())/RAND_MAX*17000);
+                int iNumFrames = std::min(static_cast<float>(iNumFramesRemaining), static_cast<float>(rand())/RAND_MAX*17000.F);
 
                 for (int c = 0; c < m_iNumChannels; c++)
                 {
