@@ -18,6 +18,7 @@ SUITE(Dtw)
         {
             m_pCDtw     = new CDtw ();
             m_ppfData   = 0;
+            m_ppiPath   = 0;
         }
 
         ~DtwData() 
@@ -29,12 +30,18 @@ SUITE(Dtw)
             delete [] m_ppfData;
             m_ppfData   = 0;
             delete m_pCDtw;
+
+            if (m_ppiPath)
+                for (int k = 0; k < CDtw::kNumMatrixDimensions; k++)
+                    delete [] m_ppiPath[k];
+            delete [] m_ppiPath;
         }
 
 
         CDtw *m_pCDtw;
 
         float   **m_ppfData;
+        int     **m_ppiPath;
 
         int     m_aiMatrixDimension[2];
     };
@@ -44,7 +51,6 @@ SUITE(Dtw)
     {
         int iPathLength = 0;
 
-        int **ppiPath = 0;
 
         int aiPathResultRow[5] = {0, 1, 2, 3, 4};
         int aiPathResultCol[5] = {0, 0, 1, 2, 3};
@@ -68,21 +74,16 @@ SUITE(Dtw)
 
         iPathLength = m_pCDtw->getPathLength();
         CHECK_EQUAL(5, iPathLength);
+        m_ppiPath = new int* [CDtw::kNumMatrixDimensions];
+        for (int k = 0; k < CDtw::kNumMatrixDimensions; k++)
+            m_ppiPath[k] = new int [iPathLength];
 
         CHECK_EQUAL(2.F, m_pCDtw->getPathCost());
 
-        ppiPath = new int* [CDtw::kNumMatrixDimensions];
-        for (int k = 0; k < CDtw::kNumMatrixDimensions; k++)
-            ppiPath[k] = new int [iPathLength];
+        m_pCDtw->getPath (m_ppiPath);
 
-        m_pCDtw->getPath (ppiPath);
-
-        CHECK_ARRAY_EQUAL(aiPathResultRow, ppiPath[CDtw::kRow], iPathLength);
-        CHECK_ARRAY_EQUAL(aiPathResultCol, ppiPath[CDtw::kCol], iPathLength);
-
-        for (int k = 0; k < CDtw::kNumMatrixDimensions; k++)
-            delete [] ppiPath[k];
-        delete [] ppiPath ;
+        CHECK_ARRAY_EQUAL(aiPathResultRow, m_ppiPath[CDtw::kRow], iPathLength);
+        CHECK_ARRAY_EQUAL(aiPathResultCol, m_ppiPath[CDtw::kCol], iPathLength);
     }
 
     TEST_FIXTURE(DtwData, Api)
@@ -102,6 +103,75 @@ SUITE(Dtw)
         CHECK_EQUAL(0, m_pCDtw->getPathLength());
     }
 
+    TEST_FIXTURE(DtwData, SingleCol)
+    {
+        int iPathLength         = 0;
+
+        m_aiMatrixDimension[0]  = 3;
+        m_aiMatrixDimension[1]  = 1;
+
+        m_ppfData   = new float*[m_aiMatrixDimension[0]];
+        for (int i = 0; i < m_aiMatrixDimension[0]; i++)
+            m_ppfData[i]    = new float [m_aiMatrixDimension[1]];
+
+        m_ppfData[0][0] = 0.1F; 
+        m_ppfData[1][0] = 1; 
+        m_ppfData[2][0] = 2; 
+
+        m_pCDtw->init(m_aiMatrixDimension[0], m_aiMatrixDimension[1]);
+        m_pCDtw->process (m_ppfData);
+
+        iPathLength = m_pCDtw->getPathLength();
+        CHECK_EQUAL(m_aiMatrixDimension[0], iPathLength);
+
+        CHECK_EQUAL(3.1F, m_pCDtw->getPathCost());
+
+        m_ppiPath = new int* [CDtw::kNumMatrixDimensions];
+        for (int k = 0; k < CDtw::kNumMatrixDimensions; k++)
+            m_ppiPath[k] = new int [iPathLength];
+
+        m_pCDtw->getPath (m_ppiPath);
+
+        for (int i = 0; i < iPathLength; i++)
+        {
+            CHECK_EQUAL(0, m_ppiPath[CDtw::kCol][i]);
+            CHECK_EQUAL(i, m_ppiPath[CDtw::kRow][i]);
+        }
+    }
+
+    TEST_FIXTURE(DtwData, SingleRow)
+    {
+        int iPathLength         = 0;
+
+        m_aiMatrixDimension[0]  = 1;
+        m_aiMatrixDimension[1]  = 3;
+
+        m_ppfData   = new float*[m_aiMatrixDimension[0]];
+        for (int i = 0; i < m_aiMatrixDimension[0]; i++)
+            m_ppfData[i]    = new float [m_aiMatrixDimension[1]];
+
+        m_ppfData[0][0] = 0.1F; m_ppfData[0][1] = 1; m_ppfData[0][2] = 2; 
+
+        m_pCDtw->init(m_aiMatrixDimension[0], m_aiMatrixDimension[1]);
+        m_pCDtw->process (m_ppfData);
+
+        iPathLength = m_pCDtw->getPathLength();
+        CHECK_EQUAL(m_aiMatrixDimension[1], iPathLength);
+
+        CHECK_EQUAL(3.1F, m_pCDtw->getPathCost());
+
+        m_ppiPath = new int* [CDtw::kNumMatrixDimensions];
+        for (int k = 0; k < CDtw::kNumMatrixDimensions; k++)
+            m_ppiPath[k] = new int [iPathLength];
+
+        m_pCDtw->getPath (m_ppiPath);
+
+        for (int i = 0; i < iPathLength; i++)
+        {
+            CHECK_EQUAL(i, m_ppiPath[CDtw::kCol][i]);
+            CHECK_EQUAL(0, m_ppiPath[CDtw::kRow][i]);
+        }
+    }
 }
 
 #endif //WITH_TESTS

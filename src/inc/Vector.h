@@ -111,7 +111,7 @@ public:
     \param iLength  buffer length
     \return void
     */
-    static void setZero (float *pfSrcDest, int iLength)
+    static inline void setZero (float *pfSrcDest, int iLength)
     {
         CVector::setZero(pfSrcDest, iLength);
     }
@@ -122,7 +122,7 @@ public:
     \param fThresh threshold value
     \return void
     */
-    static void setZeroBelowThresh (float *pfSrcDest, int iLength, float fThresh)
+    static inline void setZeroBelowThresh (float *pfSrcDest, int iLength, float fThresh)
     {
         CVector::setZeroBelowThresh(pfSrcDest, iLength, fThresh);
     }
@@ -133,17 +133,17 @@ public:
     \param iLength length of buffer
     \return void
     */
-    static void copy(float *pfDest, const float *pfSource, int iLength)
+    static inline void copy(float *pfDest, const float *pfSource, int iLength)
     {
         CVector::copy(pfDest, pfSource, iLength);
     }
 
-    /*! revferses buffer (last to first element)
+    /*! reverses buffer (last to first element)
     \param pfSrcDest pointer to memory to be flipped
     \param iLength number of elements
     \return void
     */
-    static void flip_I(float *pfSrcDest, int iLength)
+    static inline void flip_I(float *pfSrcDest, int iLength)
     {
         CVector::flip_I(pfSrcDest, iLength);
     }
@@ -155,7 +155,7 @@ public:
     \param iLength number of elements to be moved
     \return void
     */
-    static void moveInMem (float *pfSrcDest, int iDestIdx, int iSrcIdx, int iLength)
+    static inline void moveInMem (float *pfSrcDest, int iDestIdx, int iSrcIdx, int iLength)
     {
         CVector::moveInMem(pfSrcDest, iDestIdx, iSrcIdx, iLength);
     }
@@ -166,7 +166,7 @@ public:
     \param iLength number of elements to be set
     \return void
     */
-    static void setValue (float *pfDest, float fValue, int iLength)
+    static inline void setValue (float *pfDest, float fValue, int iLength)
     {
         assert (iLength >= 0);
         assert (pfDest);
@@ -181,7 +181,7 @@ public:
     \param iLength number of element to be multiplied
     \return void
     */
-    static void mulC_I (float *pfSrcDest, float fScale, int iLength)
+    static inline void mulC_I (float *pfSrcDest, float fScale, int iLength)
     {
         assert (iLength >= 0);
         assert (pfSrcDest);
@@ -196,7 +196,7 @@ public:
     \param iLength number of element to be multiplied
     \return void
     */
-    static void mul_I (float *pfSrcDest, const float *pfSrc, int iLength)
+    static inline void mul_I (float *pfSrcDest, const float *pfSrc, int iLength)
     {
         assert (iLength >= 0);
         assert (pfSrcDest);
@@ -212,7 +212,7 @@ public:
     \param iLength number of dimenions
     \return float
     */
-    static float mulScalar (const float *pfSrc1, const float *pfSrc2, int iLength)
+    static inline float mulScalar (const float *pfSrc1, const float *pfSrc2, int iLength)
     {
         assert (iLength >= 0);
         assert (pfSrc1);
@@ -231,7 +231,7 @@ public:
     \param iLength number of element to be divided
     \return void
     */
-    static void div_I (float *pfSrcDest, const float *pfSrc, int iLength)
+    static inline void div_I (float *pfSrcDest, const float *pfSrc, int iLength)
     {
         assert (iLength >= 0);
         assert (pfSrcDest);
@@ -250,7 +250,7 @@ public:
     \param iLength number of element to be added
     \return void
     */
-    static void add_I (float *pfSrcDest, const float *pfSrc, int iLength)
+    static inline void add_I (float *pfSrcDest, const float *pfSrc, int iLength)
     {
         assert (iLength >= 0);
         assert (pfSrcDest);
@@ -266,7 +266,7 @@ public:
     \param iLength number of element to be added
     \return void
     */
-    static void addC_I (float *pfSrcDest, float fScale, int iLength)
+    static inline void addC_I (float *pfSrcDest, float fScale, int iLength)
     {
         assert (iLength >= 0);
         assert (pfSrcDest);
@@ -281,7 +281,7 @@ public:
     \param iLength number of element to be subtracted
     \return void
     */
-    static void sub_I (float *pfSrcDest, const float *pfSrc, int iLength)
+    static inline void sub_I (float *pfSrcDest, const float *pfSrc, int iLength)
     {
         assert (iLength >= 0);
         assert (pfSrcDest);
@@ -297,7 +297,7 @@ public:
     \param bAbs specifies whether it is the sum of absolute values or not
     \return float
     */
-    static float sum (const float *pfSrc, int iLength, bool bAbs = false)
+    static inline float sum (const float *pfSrc, int iLength, bool bAbs = false)
     {
         assert (iLength >= 0);
         assert (pfSrc);
@@ -322,7 +322,7 @@ public:
     \param iLength number of dimensions
     \return bool
     */
-    static bool isEqual (const float *pfSrc1, const float *pfSrc2, int iLength)
+    static inline bool isEqual (const float *pfSrc1, const float *pfSrc2, int iLength)
     {
         assert (iLength >= 0);
         assert (pfSrc1);
@@ -336,7 +336,7 @@ public:
     \param iLength number of elements in buffer
     \return float
     */
-    static float getMean (const float *pfSrc, long long int iLength)
+    static inline float getMean (const float *pfSrc, long long int iLength)
     {
         assert (iLength >= 0);
 
@@ -361,7 +361,7 @@ public:
     \param fMean mean value if it has already been computed, otherwise it will be extracted in function
     \return float
     */
-    static float getStd (const float *pfSrc, long long int iLength, float fMean = std::numeric_limits<float>::max())
+    static inline float getStd (const float *pfSrc, long long int iLength, float fMean = std::numeric_limits<float>::max())
     {
         assert (iLength >= 0);
 
@@ -391,7 +391,7 @@ public:
     \param iLength number of elements in buffer
     \return float
     */
-    static float getRms (const float *pfSrc, long long int iLength)
+    static inline float getRms (const float *pfSrc, long long int iLength)
     {
         assert (iLength >= 0);
 
@@ -417,7 +417,7 @@ public:
     \param bAbs bool to specify whether we search absolute values
     \return float
     */
-    static float getMax (const float *pfSrc, long long int iLength, bool bAbs = false)
+    static inline float getMax (const float *pfSrc, long long int iLength, bool bAbs = false)
     {
         float fMax;
         long long iMax;
@@ -433,7 +433,7 @@ public:
     \param bAbs bool to specify whether we search absolute values
     \return float
     */
-    static float getMin (const float *pfSrc, long long int iLength, bool bAbs = false)
+    static inline float getMin (const float *pfSrc, long long int iLength, bool bAbs = false)
     {
         float fMin;
         long long iMin;
@@ -451,7 +451,7 @@ public:
     \param bAbs bool to specify whether we search absolute values
     \return float
     */
-    static void findMax (const float *pfSrc, float &fMax, long long &iMax, long long int iLength, bool bAbs = false)
+    static inline void findMax (const float *pfSrc, float &fMax, long long &iMax, long long int iLength, bool bAbs = false)
     {
         assert (iLength >= 0);
         assert (pfSrc);
@@ -479,7 +479,7 @@ public:
     \param bAbs bool to specify whether we search absolute values
     \return float
     */
-    static void findMin (const float *pfSrc, float &fMin, long long &iMin, long long int iLength, bool bAbs = false)
+    static inline void findMin (const float *pfSrc, float &fMin, long long &iMin, long long int iLength, bool bAbs = false)
     {
         assert (iLength >= 0);
         assert (pfSrc);

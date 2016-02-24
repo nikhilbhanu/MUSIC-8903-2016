@@ -36,9 +36,9 @@ Error_t CDtw::init( int iNumRows, int iNumCols )
     for (int i = 0; i < kNumVectors; i++)
         m_apfCost[i]    = new float [m_aiMatrixDimensions[kCol]];
 
-    m_ppePathIdx        = new Directions_t* [m_aiMatrixDimensions[kRow]];
+    m_ppePathIdx        = new unsigned char * [m_aiMatrixDimensions[kRow]];
     for (int i = 0; i < m_aiMatrixDimensions[kRow]; i++)
-        m_ppePathIdx[i] = new Directions_t [m_aiMatrixDimensions[kCol]];
+        m_ppePathIdx[i] = new unsigned char [m_aiMatrixDimensions[kCol]];
 
     // all done here
     m_bIsInitialized    = true;
@@ -83,7 +83,7 @@ Error_t CDtw::process(float **ppfDistanceMatrix)
     if (!ppfDistanceMatrix)
         return kFunctionInvalidArgsError;
 
-    float fFirstColCost = 0;        //!< variable that will only contain the cost of the first column (for the current row to be processed)
+    float fFirstColCost         = 0;        //!< variable that will only contain the cost of the first column (for the current row to be processed)
 
     // initialize
     CVectorFloat::setZero(m_apfCost[kRowNext], m_aiMatrixDimensions[kCol]);
@@ -100,22 +100,23 @@ Error_t CDtw::process(float **ppfDistanceMatrix)
         m_ppePathIdx[i][0]      = kVert;
     }
 
-    // compute cost 'matrix' and store backtracking path
+    // compute cost 'matrix' (we only use two rows here) and store backtracking path
     for (int i = 1; i < m_aiMatrixDimensions[kRow]; i++)
     {
-        float fColCost;         //!< variable containing the cost of the index left of the current matrix index
-
         // init the variables we need for the current row (remember the cost in the first column, and then increment it)
-        m_apfCost[kRowCurr][0]  = fFirstColCost;
-        fFirstColCost          += ppfDistanceMatrix[i][0];
-        fColCost                = fFirstColCost;
+        m_apfCost[kRowCurr][0]      = fFirstColCost;
+        fFirstColCost              += ppfDistanceMatrix[i][0];
+        m_apfCost[kRowNext][0]      = fFirstColCost;
 
         for (int j = 1; j < m_aiMatrixDimensions[kCol]; j++)
         {
-            m_ppePathIdx[i][j]      = findMinimum(fColCost, m_apfCost[kRowCurr][j], m_apfCost[kRowCurr][j-1], fColCost);
-            fColCost               += ppfDistanceMatrix[i][j];
-            m_apfCost[kRowNext][j]  = fColCost;  
+            m_ppePathIdx[i][j]      = static_cast<unsigned char>(findMinimum(   m_apfCost[kRowNext][j-1],   // horiz
+                                                                                m_apfCost[kRowCurr][j],     // vert
+                                                                                m_apfCost[kRowCurr][j-1],   // diag
+                                                                                m_apfCost[kRowNext][j]));   // minimum cost output
+            m_apfCost[kRowNext][j] += ppfDistanceMatrix[i][j];
         }
+
         // swap the pointers of our two buffers as we proceed to the next row
         CUtil::swap(m_apfCost[kRowCurr], m_apfCost[kRowNext]);
     }

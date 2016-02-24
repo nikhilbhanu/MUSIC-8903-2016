@@ -98,7 +98,7 @@ private:
 
     float *m_apfCost[kNumVectors];
     float m_fOverallCost;
-    Directions_t  **m_ppePathIdx;
+    unsigned char  **m_ppePathIdx;
     int   m_iLengthOfPath;
     int   m_aiMatrixDimensions[kNumMatrixDimensions];
 };
